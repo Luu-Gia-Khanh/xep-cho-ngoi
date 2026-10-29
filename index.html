@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff6f9">
+  <title>Lớp Mình Xinh – Xếp chỗ ngồi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+</head>
+<body>
+  <div class="bg-deco" aria-hidden="true">
+    <span style="left:4%;top:18%">☁️</span><span style="left:88%;top:12%;animation-delay:-4s">🌸</span>
+    <span style="left:72%;top:82%;animation-delay:-7s">⭐</span><span style="left:12%;top:78%;animation-delay:-2s">🍓</span>
+    <span style="left:46%;top:92%;animation-delay:-9s">💗</span><span style="left:94%;top:52%;animation-delay:-5s">☁️</span>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🌸</span>
+      <div><h1>Lớp Mình Xinh</h1><p>Xếp chỗ ngồi siêu dễ thương</p></div>
+    </div>
+    <button class="class-pill" id="btnClass" title="Chọn / quản lý lớp">
+      <span class="pill-e">🏫</span><b id="className">Lớp</b><small id="classCount"></small><span class="caret">▾</span>
+    </button>
+    <nav class="tools">
+      <button class="btn primary" id="btnArrange" title="Xếp chỗ tự động">✨ <span>Xếp tự động</span></button>
+      <div class="btn-group">
+        <button class="btn icon" id="btnUndo" title="Hoàn tác (Ctrl+Z)">↶</button>
+        <button class="btn icon" id="btnRedo" title="Làm lại (Ctrl+Y)">↷</button>
+      </div>
+      <button class="btn" id="btnLayout" title="Bố trí bàn ghế">🪑 <span>Bố trí lớp</span></button>
+      <button class="btn" id="btnSaved" title="Lưu / mở sơ đồ">💾 <span>Sơ đồ đã lưu</span></button>
+      <button class="btn" id="btnExport" title="In, xuất ảnh, Excel">📤 <span>Xuất &amp; In</span></button>
+      <button class="btn icon" id="btnClear" title="Xóa sơ đồ (đưa cả lớp về danh sách)">🧹</button>
+      <button class="btn icon" id="btnSound" title="Bật / tắt âm thanh">🔊</button>
+      <button class="btn icon" id="btnHelp" title="Hướng dẫn">❓</button>
+    </nav>
+  </header>
+
+  <main class="app" id="app">
+    <aside class="sidebar" id="sidebar">
+      <button class="sheet-handle" id="sheetToggle" aria-label="Mở rộng / thu gọn danh sách"><span></span></button>
+      <div class="stats" id="stats"></div>
+      <div class="search" id="searchBox">
+        <span>🔍</span>
+        <input id="search" placeholder="Tìm học sinh… (phím /)" autocomplete="off">
+        <button id="searchClear" title="Xóa tìm kiếm">✕</button>
+      </div>
+      <div class="side-actions">
+        <button class="btn mint" id="btnAdd">＋ Thêm HS</button>
+        <button class="btn lav" id="btnImport">📥 Nhập DS</button>
+        <button class="btn icon" id="btnList" title="Danh sách cả lớp">📋</button>
+      </div>
+      <div class="pool-head">
+        <b>Chưa có chỗ</b><span class="badge" id="poolCount">0</span>
+        <button class="link" id="btnQuickFill" title="Xếp ngẫu nhiên các bạn chưa có chỗ vào chỗ trống">⚡ Xếp nhanh</button>
+      </div>
+      <div class="pool" id="pool"></div>
+      <div class="pool-hint">Kéo thẻ vào chỗ ngồi 💕 · Kéo về đây để bỏ chỗ</div>
+    </aside>
+
+    <section class="stage">
+      <div class="stage-tools">
+        <div class="seg" id="viewSeg">
+          <span class="thumb"></span>
+          <button data-view="student" title="Bảng ở phía trên">🎒 <span class="lbl">Nhìn từ </span>học sinh</button>
+          <button data-view="teacher" title="Bảng ở phía dưới, như cô đứng trên bục">👩‍🏫 <span class="lbl">Nhìn từ </span>bục giảng</button>
+        </div>
+        <button class="btn sm" id="btnEditDesks" title="Bấm vào bàn để bật / tắt">✏️ Sửa bàn</button>
+        <button class="btn sm" id="btnRotCols" title="Cả lớp chuyển sang dãy bên cạnh">↔️ Đổi dãy</button>
+        <button class="btn sm" id="btnRotRows" title="Mỗi bạn lùi 1 bàn, bàn cuối lên bàn đầu">↕️ Đổi bàn</button>
+        <div class="zoom">
+          <button class="btn icon sm" id="zoomOut" title="Thu nhỏ">－</button>
+          <input type="range" id="zoom" min="55" max="140" step="1" aria-label="Thu phóng">
+          <button class="btn icon sm" id="zoomIn" title="Phóng to">＋</button>
+          <button class="btn sm" id="zoomFit" title="Vừa khung hình">⤢ Vừa</button>
+        </div>
+      </div>
+      <div class="stage-scroll" id="stageScroll">
+        <div class="stage-inner">
+          <div class="print-head"><h2 id="printTitle"></h2><p id="printDate"></p></div>
+          <div class="room" id="room">
+            <div class="front">
+              <div class="board"><span class="chalk" id="boardText"></span><span class="chalk-bits">✏️</span></div>
+              <div class="teacher-desk">👩‍🏫<span>Bàn giáo viên</span>🍎</div>
+            </div>
+            <div class="col-labels" id="colLabels"></div>
+            <div class="rows" id="rows"></div>
+            <div class="door">🚪 Cửa ra vào</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="pick-bar" id="pickBar" hidden></div>
+  <div id="flyLayer" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
